@@ -5,6 +5,7 @@
 #include <stdint.h> // int32_t
 #include <stdlib.h> // strtod
 #include <string.h> // strncmp, memset
+#include <stdbool.h>
 
 #define min(a, b) (a) < (b) ? (a) : (b)
 #define max(a, b) (a) > (b) ? (a) : (b)
@@ -90,6 +91,50 @@ void print_map_entries(map_entry_t *map, size_t map_size) {
 	}
 }
 
+double read_double(char *start, char **end) {
+	double sign = (double)1;
+	double mag = (double)0;
+
+	char *p = start;
+
+	while (true) {
+		switch (*p) {
+
+			case '\n':
+			case '\0':
+				*end = p;
+				return sign * mag / (double)10;
+
+			case '-':
+				sign = (double)-1;
+				break;
+
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
+				mag *= 10;
+				mag += (*p - '0');
+				break;
+
+			case '.':
+				break;
+
+			default:
+				printf("unexpected character '%c'\n", *p);
+				break;
+		}
+
+		p++;
+	}
+}
+
 int main(int argc, char **argv) {
 	int fd = open(argv[1], 0, O_RDONLY);
 
@@ -108,7 +153,7 @@ int main(int argc, char **argv) {
 
 		string number;
 		number.start = p;
-		double value = strtod(p, &p);
+		double value = read_double(p, &p);
 		number.size = p - number.start;
 		p++;
 
