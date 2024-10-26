@@ -81,12 +81,11 @@ void add_entry(map_entry_t *map, size_t map_size, string name, double value) {
 void print_map_entries(map_entry_t *map, size_t map_size) {
 	for (int i = 0; i < map_size; i++) {
 		if (map[i].name.start) {
-			printf("(%p)\t%.*s:\tmin %lf\tmax %lf\tavg. %lf\n",
-					&map[i],
+			printf("%.*s;%.1lf;%.1lf;%.1lf\n",
 					(int)map[i].name.size, map[i].name.start,
-					map[i].max,
 					map[i].min,
-					map[i].total / (float)map[i].count);
+					map[i].total / (float)map[i].count,
+					map[i].max);
 		}
 	}
 }
