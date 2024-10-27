@@ -20,7 +20,7 @@ typedef struct {
 	size_t size;
 } string;
 
-#define MAP_SIZE 50000
+#define MAP_SIZE 10000
 typedef struct {
 	string name;
 	double min;
