@@ -78,21 +78,25 @@ void add_entry(map_entry *map, size_t map_size, string name, double value) {
 			entry->total += value;
 			entry->count++;
 			return;
+
 		} else {
 			// wrong entry; move along
 		}
 	}
 }
 
-void print_map_entries(map_entry_t *map, size_t map_size) {
+void print_map_entries(map_entry *map, size_t map_size) {
 	for (int i = 0; i < map_size; i++) {
-		if (map[i].name.start) {
-			printf("%.*s;%.1lf;%.1lf;%.1lf\n",
-					(int)map[i].name.size, map[i].name.start,
-					map[i].min,
-					map[i].total / (float)map[i].count,
-					map[i].max);
-		}
+
+		// qsort puts all the empty map entries at the end of the map,
+		// so we can early-return when we find the first one.
+		if (!map[i].count) return;
+
+		printf("%.*s;%.1lf;%.1lf;%.1lf\n",
+				(int)map[i].name.size, map[i].name.start,
+				map[i].min,
+				map[i].total / (float)map[i].count,
+				map[i].max);
 	}
 }
 
