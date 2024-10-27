@@ -173,10 +173,7 @@ int main(int argc, char **argv) {
 		name.size = p - name.start;
 		p++;
 
-		string number;
-		number.start = p;
 		double value = read_double(p, &p);
-		number.size = p - number.start;
 		p++;
 
 		add_entry(map, MAP_SIZE, name, value);
