@@ -1,3 +1,5 @@
+// vim: ts=4 sw=4 noet
+
 #include <stdio.h> // printf
 #include <fcntl.h> // open
 #include <sys/mman.h> // mmap
