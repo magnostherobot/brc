@@ -27,7 +27,7 @@ typedef struct {
 	double max;
 	double total;
 	unsigned int count;
-} map_entry_t;
+} map_entry;
 
 unsigned long djb2(string name) {
 	unsigned long hash = 5381;
@@ -57,10 +57,12 @@ int string_compare(const string *a, const string *b) {
 	return result;
 }
 
-void add_entry(map_entry_t *map, size_t map_size, string name, double value) {
+void add_entry(map_entry *map, size_t map_size, string name, double value) {
 	unsigned long hash = djb2(name);
+
 	for (int i = 0; i < MAP_SIZE; i++) {
-		map_entry_t *entry = map + ((hash + i) % MAP_SIZE);
+		map_entry *entry = map + ((hash + i) % MAP_SIZE);
+
 		if (entry->name.start == NULL) {
 			// new entry
 			entry->name = name;
@@ -139,8 +141,8 @@ double read_double(char *start, char **end) {
 }
 
 int compare_map_entries(const void *ap, const void *bp) {
-	const map_entry_t *a = ap;
-	const map_entry_t *b = bp;
+	const map_entry *a = ap;
+	const map_entry *b = bp;
 
 	if (!a->count) return 1;
 	if (!b->count) return -1;
@@ -154,7 +156,7 @@ int main(int argc, char **argv) {
 	off_t file_size = lseek(fd, 0, SEEK_END);
 	char *mem = mmap(NULL, file_size + 1, PROT_READ, MAP_SHARED, fd, 0);
 
-	map_entry_t *map = malloc(MAP_SIZE * sizeof (*map));
+	map_entry *map = malloc(MAP_SIZE * sizeof (*map));
 
 	for (char *p = mem; *p;) {
 		string name;
