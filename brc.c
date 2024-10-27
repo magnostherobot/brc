@@ -50,8 +50,9 @@ char *find_semicolon(char *hay, size_t n) {
 	return NULL;
 }
 
-int string_compare(string *a, string *b) {
-	return strncmp(a->start, b->start, min(a->size, b->size));
+int string_compare(const string *a, const string *b) {
+	int result = strncmp(a->start, b->start, min(a->size, b->size));
+	return result;
 }
 
 void add_entry(map_entry_t *map, size_t map_size, string name, double value) {
@@ -135,11 +136,20 @@ double read_double(char *start, char **end) {
 	}
 }
 
+int compare_map_entries(const void *ap, const void *bp) {
+	const map_entry_t *a = ap;
+	const map_entry_t *b = bp;
+
+	if (!a->count) return 1;
+	if (!b->count) return -1;
+
+	return string_compare(&a->name, &b->name);
+}
+
 int main(int argc, char **argv) {
 	int fd = open(argv[1], 0, O_RDONLY);
 
 	off_t file_size = lseek(fd, 0, SEEK_END);
-
 	char *mem = mmap(NULL, file_size + 1, PROT_READ, MAP_SHARED, fd, 0);
 
 	map_entry_t *map = malloc(MAP_SIZE * sizeof (*map));
@@ -160,6 +170,7 @@ int main(int argc, char **argv) {
 		add_entry(map, MAP_SIZE, name, value);
 	}
 
+	qsort(map, MAP_SIZE, sizeof (*map), compare_map_entries);
 	print_map_entries(map, MAP_SIZE);
 
 	return 0;
