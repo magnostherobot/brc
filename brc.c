@@ -71,6 +71,7 @@ void add_entry(map_entry *map, size_t map_size, string name, double value) {
 			entry->total = value;
 			entry->count = 1;
 			return;
+
 		} else if (!string_compare(&name, &entry->name)) {
 			// existing entry
 			entry->min = min(entry->min, value);
@@ -158,6 +159,9 @@ int main(int argc, char **argv) {
 	int fd = open(argv[1], 0, O_RDONLY);
 
 	off_t file_size = lseek(fd, 0, SEEK_END);
+
+	// By allocating an extra byte at the end of the file,
+	// we can use a null-check to terminate the for-loop below.
 	char *mem = mmap(NULL, file_size + 1, PROT_READ, MAP_SHARED, fd, 0);
 
 	map_entry *map = malloc(MAP_SIZE * sizeof (*map));
