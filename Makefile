@@ -1,1 +1,2 @@
-brc: brc.c
+CFLAGS = -O2
+all: brc create-sample
